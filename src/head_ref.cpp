@@ -122,45 +122,6 @@ bool transformPoint(const tf::TransformListener& listener, ModelData model_data)
 }
 
 
-int main(int argc, char** argv){
-  ros::init(argc, argv, "head_ref");
-  ros::NodeHandle nh;
-
-  ros::Rate rate(1.0);
-  //get target frame from parameter server
-  while(!nh.getParam("/target_frame",target_frame) && nh.ok())
-  {
-    ROS_ERROR("No target_frame given. Load a /target_frame on the parameter server.");
-    rate.sleep();
-  }
-
-  //get parameters from parameter server or set defaults
-  nh.param<double> ("pos_x", target_x,0.0);
-  nh.param<double> ("pos_y", target_y,0.0);
-  nh.param<double> ("pos_z", target_z,0.0);
-
-  //set topic
-  head_pub = nh.advertise<amigo_msgs::head_ref>("/head_controller/set_Head", 50);
-  marker_pub = nh.advertise<visualization_msgs::Marker>("target_head", 1);
-
-
-  //create ModelData object
-  ModelData k;  
-  if (k.init()<0) {
-        ROS_ERROR("Could not get amigo model");
-        return -1;
-  }
-
-  tf::TransformListener listener(ros::Duration(10));
-
-  //transform points with certain time interval
-  ros::Timer timer = nh.createTimer(ros::Duration(0.1), boost::bind(&transformPoint,boost::ref(listener),k));
-  
-  ros::spin();
-
-  return true;
-}
-
 void publishMarker(void){
 
   //create marker object
@@ -207,4 +168,45 @@ void publishMarker(void){
   // Publish the marker
   marker_pub.publish(marker);
 
+}
+
+
+
+int main(int argc, char** argv){
+  ros::init(argc, argv, "head_ref");
+  ros::NodeHandle nh;
+
+  ros::Rate rate(1.0);
+  //get target frame from parameter server
+  while(!nh.getParam("/target_frame",target_frame) && nh.ok())
+  {
+    ROS_ERROR("No target_frame given. Load a /target_frame on the parameter server.");
+    rate.sleep();
+  }
+
+  //get parameters from parameter server or set defaults
+  nh.param<double> ("pos_x", target_x,0.0);
+  nh.param<double> ("pos_y", target_y,0.0);
+  nh.param<double> ("pos_z", target_z,0.0);
+
+  //set topic
+  head_pub = nh.advertise<amigo_msgs::head_ref>("/head_controller/set_Head", 50);
+  marker_pub = nh.advertise<visualization_msgs::Marker>("target_head", 1);
+
+
+  //create ModelData object
+  ModelData k;  
+  if (k.init()<0) {
+        ROS_ERROR("Could not get amigo model");
+        return -1;
+  }
+
+  tf::TransformListener listener(ros::Duration(10));
+
+  //transform points with certain time interval
+  ros::Timer timer = nh.createTimer(ros::Duration(0.1), boost::bind(&transformPoint,boost::ref(listener),k));
+  
+  ros::spin();
+
+  return true;
 }
