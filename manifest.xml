@@ -19,7 +19,7 @@
   <depend package="amigo_msgs"/>
   <depend package="visualization_msgs"/>
   <depend package="geometry_msgs"/>
-
+  <depend package="dynamixel"/>
 
 </package>
 

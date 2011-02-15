@@ -124,6 +124,13 @@ bool transformPoint(const tf::TransformListener& listener){
   //publish visualization marker for rviz
   publishMarker();
   
+  //publish to dynamixel
+  dynamixel_msg.id = 0;
+  dynamixel_msg.goal = tilt_angle;
+  
+  dynamixel_pub.publish(dynamixel_msg);
+
+  
   }
   
   return true;
@@ -187,6 +194,9 @@ int main(int argc, char** argv){
   //set topic
   head_pub = nh.advertise<amigo_msgs::head_ref>("/head_controller/set_Head", 50);
   marker_pub = nh.advertise<visualization_msgs::Marker>("target_head", 1);
+  dynamixel_pub = nh.advertise<dynamixel::angle>("ax_pos", 1000);
+
+  
   target_sub = nh.subscribe("head_target", 1, targetCallback);
   
   received = false;

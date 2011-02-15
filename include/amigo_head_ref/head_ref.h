@@ -12,6 +12,7 @@
 #include <kinematics_msgs/KinematicSolverInfo.h>
 #include <amigo_msgs/head_ref.h>
 #include <visualization_msgs/Marker.h>
+#include "dynamixel/angle.h"
 
 
 
@@ -39,8 +40,14 @@ void publishMarker(void);
 
 ros::Publisher marker_pub;
 ros::Publisher head_pub;
+ros::Publisher dynamixel_pub;
+
+
 ros::Subscriber target_sub;
 
 amigo_msgs::head_ref head_ref;
+dynamixel::angle dynamixel_msg;
+
+
 geometry_msgs::PointStamped target;
 bool received;
