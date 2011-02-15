@@ -34,11 +34,13 @@ class ModelData {
 };
 
 bool transformPoint(const tf::TransformListener& listener, ModelData model_data);
+void targetCallback(const geometry_msgs::PointStamped::ConstPtr& msg);
 void publishMarker(void);
 
 ros::Publisher marker_pub;
 ros::Publisher head_pub;
-amigo_msgs::head_ref head_ref;
+ros::Subscriber target_sub;
 
-std::string target_frame;
-double target_x, target_y, target_z;
+amigo_msgs::head_ref head_ref;
+geometry_msgs::PointStamped target;
+bool received;

@@ -32,4 +32,7 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 rosbuild_add_library(modeldata_lib src/modeldata.cpp)
 
 rosbuild_add_executable(head_ref src/head_ref.cpp)
+
 target_link_libraries(head_ref modeldata_lib)
+
+rosbuild_add_executable(test_client src/test_client.cpp)
