@@ -8,7 +8,7 @@ void targetCallback(const geometry_msgs::PointStamped::ConstPtr& msg){
 	
 	target = *msg;
 	received = true;
-	ROS_INFO("received target for head");
+	ROS_INFO("Received target for head: (%.2f, %.2f, %.2f) in frame '%s'",target.point.x,target.point.y,target.point.z,target.header.frame_id.c_str());
 	
 }
 
@@ -50,7 +50,7 @@ bool transformPoint(const tf::TransformListener& listener){
     try{  //transform from head to neck_tilt_point
         listener.transformPoint("head", neck_point, head_point_neck);
         
-    ROS_INFO("head_point: (%.3f, %.3f. %.3f) -----> neck_tilt_point: (%.3f, %.3f, %.3f) at time %.2f",
+    ROS_DEBUG("head_point: (%.3f, %.3f. %.3f) -----> neck_tilt_point: (%.3f, %.3f, %.3f) at time %.2f",
         neck_point.point.x, neck_point.point.y, neck_point.point.z,
         head_point_neck.point.x, head_point_neck.point.y, head_point_neck.point.z, head_point_neck.header.stamp.toSec());
       }
@@ -62,7 +62,7 @@ bool transformPoint(const tf::TransformListener& listener){
   try{  //transform from desired_point to torso
         listener.transformPoint("torso", desired_point, torso_point);
         
-    ROS_INFO("desired_point: (%.2f, %.2f. %.2f) -----> torso_point: (%.2f, %.2f, %.2f) at time %.2f",
+    ROS_DEBUG("desired_point: (%.2f, %.2f. %.2f) -----> torso_point: (%.2f, %.2f, %.2f) at time %.2f",
         desired_point.point.x, desired_point.point.y, desired_point.point.z,
         torso_point.point.x, torso_point.point.y, torso_point.point.z, torso_point.header.stamp.toSec());
       }
@@ -213,6 +213,7 @@ int main(int argc, char** argv){
   //transform points with certain time interval
   ros::Timer timer = nh.createTimer(ros::Duration(0.1), boost::bind(&transformPoint,boost::ref(listener)));
   
+  ROS_INFO("Amigo_head_ref active and waiting for target");
   ros::spin();
 
   return true;
