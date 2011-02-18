@@ -16,7 +16,7 @@ bool transformPoint(const tf::TransformListener& listener){
   
   if (received){
   
-  geometry_msgs::PointStamped desired_point,torso_point, head_point, neck_point, torso_point_neck, head_point_neck;
+  geometry_msgs::PointStamped desired_point,torso_point, head_point, neck_point, torso_point_neck, head_point_neck, target_to_head_pan_point;
   
   
   desired_point = target;
@@ -70,6 +70,18 @@ bool transformPoint(const tf::TransformListener& listener){
     ROS_ERROR("1. Received an exception trying to transform: %s", ex.what());
     return false;
   }
+  
+    try{  //transform from desired_point to neck_pan
+        listener.transformPoint("neck_pan", desired_point, target_to_head_pan_point);
+        
+    ROS_INFO("desired_point: (%.2f, %.2f. %.2f) -----> head_pan: (%.2f, %.2f, %.2f) at time %.2f",
+        desired_point.point.x, desired_point.point.y, desired_point.point.z,
+        target_to_head_pan_point.point.x, target_to_head_pan_point.point.y, target_to_head_pan_point.point.z, target_to_head_pan_point.header.stamp.toSec());
+      }
+  catch(tf::TransformException& ex){
+    ROS_ERROR("1. Received an exception trying to transform: %s", ex.what());
+    return false;
+  }
  
   //get head and neck joint limits
   double neck_lower = -2; ///model_data.joint_min.data[0];
@@ -91,15 +103,15 @@ bool transformPoint(const tf::TransformListener& listener){
   double b_neck = fabs(torso_point_neck.point.z);
   ROS_DEBUG(" h_neck = %f, b_neck = %f", h_neck, b_neck);
   
-  //distance from neck_tilt joint to torso
+  //distance from head to neck_tilt 
   double h_head = fabs(head_point_neck.point.z);
   ROS_DEBUG(" h_head = %f", h_head);
   
-  //compute vertical distance to tracked point from height of head joint
+  //compute vertical distance = between tracked point en neck_tilt
   double delta_h = torso_point.point.x - h_neck;
   
-  //compute horizontal distance to tracked point from height of head joint
-  double delta_b = torso_point.point.z - b_neck;
+  //compute horizontal distance between tracked point en neck_tilt
+  double delta_b = target_to_head_pan_point.point.x - b_neck;
   
   //compute distance from tracked point to 
   double r = sqrt(delta_h * delta_h + delta_b * delta_b);
@@ -107,7 +119,7 @@ bool transformPoint(const tf::TransformListener& listener){
   double alpha = atan2(delta_h, delta_b); 
   double beta = 0.5*PI - acos( h_head/r );
   
-  //compute total angle
+  //compute total tilt angle
   tilt_angle = (-alpha + beta);
   
   ROS_DEBUG("delta_h = %f\t, delta_b = %f\t, r=%f",delta_h, delta_b,r);

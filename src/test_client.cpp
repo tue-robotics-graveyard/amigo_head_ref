@@ -10,7 +10,7 @@ int main(int argc, char** argv){
   
   geometry_msgs::PointStamped target;
   
-  target.header.frame_id = "grippoint_left";
+  target.header.frame_id = "grasp_left";
   target.point.x = 0.0;
   target.point.y = 0.0;
   target.point.z = 0.0;
