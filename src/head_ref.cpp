@@ -74,7 +74,7 @@ bool transformPoint(const tf::TransformListener& listener){
     try{  //transform from desired_point to neck_pan
         listener.transformPoint("neck_pan", desired_point, target_to_head_pan_point);
         
-    ROS_INFO("desired_point: (%.2f, %.2f. %.2f) -----> head_pan: (%.2f, %.2f, %.2f) at time %.2f",
+    ROS_DEBUG("desired_point: (%.2f, %.2f. %.2f) -----> head_pan: (%.2f, %.2f, %.2f) at time %.2f",
         desired_point.point.x, desired_point.point.y, desired_point.point.z,
         target_to_head_pan_point.point.x, target_to_head_pan_point.point.y, target_to_head_pan_point.point.z, target_to_head_pan_point.header.stamp.toSec());
       }
