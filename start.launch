@@ -1,5 +1,4 @@
 <launch>
 
   <node pkg="amigo_head_ref" type="head_ref" respawn="false" name="head_ref" output="screen"/>
-  <rosparam file="$(find amigo_head_ref)/parameters.yaml" command="load" />
 </launch>

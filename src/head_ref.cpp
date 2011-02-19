@@ -12,7 +12,7 @@ void targetCallback(const geometry_msgs::PointStamped::ConstPtr& msg){
 	
 }
 
-bool transformPoint(const tf::TransformListener& listener){
+bool transformPoint(const tf::TransformListener& listener, ModelData model_data){
   
   if (received){
   
@@ -84,14 +84,14 @@ bool transformPoint(const tf::TransformListener& listener){
   }
  
   //get head and neck joint limits
-  double neck_lower = -2; ///model_data.joint_min.data[0];
-  double neck_upper = 2 ;///model_data.joint_max.data[0];
+  double head_pan_min = model_data.joint_min.data[0];
+  double head_pan_max = model_data.joint_max.data[0];
   
-  double head_lower = -2;///model_data.joint_min.data[1];
-  double head_upper = 2;///model_data.joint_max.data[1];
+  double head_tilt_min = model_data.joint_min.data[1];
+  double head_tilt_max = model_data.joint_max.data[1];
   
-  ROS_DEBUG("neck_lower = %f, neck_upper = %f",neck_lower,neck_upper);
-  ROS_DEBUG("head_lower = %f, head_upper = %f",head_lower,head_upper);
+  ROS_DEBUG("head_pan_min = %f, head_pan_max = %f",head_pan_min,head_pan_max);
+  ROS_DEBUG("head_tilt_min = %f, head_tilt_max = %f",head_tilt_min,head_tilt_max);
   
   double pan_angle, tilt_angle;
   
@@ -136,7 +136,7 @@ bool transformPoint(const tf::TransformListener& listener){
   //publish visualization marker for rviz
   publishMarker();
   
-  //publish to dynamixel
+  //publish to dynamixel (THIS IS NOT FUNCTIONAL YET ON THE REAL ROBOT AS THE DYNAMIXEL INTEGRATION IS NOT YET WORKING)
   dynamixel_msg.id = 0;
   dynamixel_msg.goal = tilt_angle;
   
@@ -212,20 +212,20 @@ int main(int argc, char** argv){
   target_sub = nh.subscribe("head_target", 1, targetCallback);
   
   received = false;
-  /*
+  
   //create ModelData object
   ModelData k;  
-  if (k.init()<0) {
-        ROS_ERROR("Could not get amigo model");
-        return -1;
+  while (!k.init() && ros::ok()) {
+    ROS_WARN("Could not get amigo model. Is amigo_simulation model or amigo_state_publisher running?");
+    usleep(5000000);
   }
-*/
+  ROS_INFO("Amigo_head_ref active and waiting for target");
+  
   tf::TransformListener listener(ros::Duration(10));
 
   //transform points with certain time interval
-  ros::Timer timer = nh.createTimer(ros::Duration(0.1), boost::bind(&transformPoint,boost::ref(listener)));
+  ros::Timer timer = nh.createTimer(ros::Duration(0.1), boost::bind(&transformPoint,boost::ref(listener),k));
   
-  ROS_INFO("Amigo_head_ref active and waiting for target");
   ros::spin();
 
   return true;
