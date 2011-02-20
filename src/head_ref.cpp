@@ -209,7 +209,7 @@ int main(int argc, char** argv){
   ros::NodeHandle nh;
 
   //set topic
-  head_pub = nh.advertise<amigo_msgs::head_ref>("/head_controller/set_Head", 50);
+  head_pub = nh.advertise<amigo_msgs::head_ref>("set_Head", 50);
   marker_pub = nh.advertise<visualization_msgs::Marker>("head_target_marker", 1);
   dynamixel_pan_pub = nh.advertise<dynamixel::angle>("dynamixel_pan", 10);
   dynamixel_tilt_pub = nh.advertise<dynamixel::angle>("dynamixel_tilt", 10);
