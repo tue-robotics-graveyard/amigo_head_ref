@@ -45,11 +45,9 @@ bool ModelData::readJoints(urdf::Model &robot_model) {
 
     joint_min.resize(num_joints);
     joint_max.resize(num_joints);
-    info.joint_names.resize(num_joints);
-    info.limits.resize(num_joints);
 
     link = robot_model.getLink("head");
-    unsigned int i = 0;
+    int i = 0;
     while (link && i < num_joints) {
         joint = robot_model.getJoint(link->parent_joint->name);
         if (joint->type != urdf::Joint::UNKNOWN && joint->type != urdf::Joint::FIXED) {
@@ -68,8 +66,8 @@ bool ModelData::readJoints(urdf::Model &robot_model) {
             }
             int index = num_joints - i -1;
 
-            joint_min.data[index] = lower;
-            joint_max.data[index] = upper;
+            joint_min[index] = lower;
+            joint_max[index] = upper;
             i++;
             ROS_DEBUG("joint name = %s\t, low lim = %f\t, up lim =%f",joint->name.c_str(),lower, upper);
         }

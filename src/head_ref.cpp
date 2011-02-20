@@ -84,11 +84,11 @@ bool transformPoint(const tf::TransformListener& listener, ModelData model_data)
   }
  
   //get head and neck joint limits
-  double head_pan_min = model_data.joint_min.data[0];
-  double head_pan_max = model_data.joint_max.data[0];
+  double head_pan_min = model_data.joint_min[0];
+  double head_pan_max = model_data.joint_max[0];
   
-  double head_tilt_min = model_data.joint_min.data[1];
-  double head_tilt_max = model_data.joint_max.data[1];
+  double head_tilt_min = model_data.joint_min[1];
+  double head_tilt_max = model_data.joint_max[1];
   
   ROS_DEBUG("head_pan_min = %f, head_pan_max = %f",head_pan_min,head_pan_max);
   ROS_DEBUG("head_tilt_min = %f, head_tilt_max = %f",head_tilt_min,head_tilt_max);
@@ -137,11 +137,16 @@ bool transformPoint(const tf::TransformListener& listener, ModelData model_data)
   publishMarker();
   
   //publish to dynamixel (THIS IS NOT FUNCTIONAL YET ON THE REAL ROBOT AS THE DYNAMIXEL INTEGRATION IS NOT YET WORKING)
-  dynamixel_msg.id = 0;
-  dynamixel_msg.goal = tilt_angle;
+  dynamixel::angle dynamixel_pan_msg;
+  dynamixel::angle dynamixel_tilt_msg;
   
-  dynamixel_pub.publish(dynamixel_msg);
+  dynamixel_pan_msg.id = 0;
+  dynamixel_pan_msg.goal = pan_angle;
+  dynamixel_pan_pub.publish(dynamixel_pan_msg);
 
+  dynamixel_tilt_msg.id = 0;
+  dynamixel_tilt_msg.goal = tilt_angle;
+  dynamixel_tilt_pub.publish(dynamixel_tilt_msg);
   
   }
   
@@ -205,8 +210,9 @@ int main(int argc, char** argv){
 
   //set topic
   head_pub = nh.advertise<amigo_msgs::head_ref>("/head_controller/set_Head", 50);
-  marker_pub = nh.advertise<visualization_msgs::Marker>("target_head", 1);
-  dynamixel_pub = nh.advertise<dynamixel::angle>("ax_pos", 1000);
+  marker_pub = nh.advertise<visualization_msgs::Marker>("head_target_marker", 1);
+  dynamixel_pan_pub = nh.advertise<dynamixel::angle>("dynamixel_pan", 10);
+  dynamixel_tilt_pub = nh.advertise<dynamixel::angle>("dynamixel_tilt", 10);
 
   
   target_sub = nh.subscribe("head_target", 1, targetCallback);
