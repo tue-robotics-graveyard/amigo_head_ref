@@ -1,6 +1,0 @@
-<launch>
-
-  <node pkg="amigo_head_ref" type="head_ref" respawn="false" name="head_ref" output="screen">
-  <remap from="/set_Head" to="/head_controller/set_Head"/>
-  </node>
-</launch>

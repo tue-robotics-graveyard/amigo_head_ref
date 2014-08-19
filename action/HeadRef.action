@@ -1,0 +1,31 @@
+#goal definition
+byte LOOKAT = 0
+byte PAN_TILT = 1
+
+byte goal_type   # either LOOKAT or PAN_TILT
+
+# in case of LOOKAT:
+geometry_msgs/PointStamped target_point  # use in case of LOOKAT
+bool keep_tracking # if FALSE, the action will succeed once the head points to the
+                   # target (for the first time)
+                   # if TRUE, the action will never succeed, but the head will keep
+                   # following the target. The action CAN be canceled though.
+
+# in case of PAN_TILT
+float64 pan      # use in case of PAN_TILT
+float64 tilt     # use in case of PAN_TILT
+
+float64 pan_vel   # If set to 0, a default will be used
+float64 tilt_vel  # If set to 0, a default will be used
+
+float64 min_pan   # If set to 0, a default will be used
+float64 max_pan   # If set to 0, a default will be used 
+float64 min_tilt  # If set to 0, a default will be used
+float64 max_tilt  # If set to 0, a default will be used
+
+---
+#result definition
+string result
+---
+#feedback
+string current_status

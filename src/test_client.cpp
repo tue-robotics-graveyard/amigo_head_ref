@@ -1,5 +1,5 @@
 #include <ros/ros.h>
-#include <amigo_head_ref/head_ref.h>
+#include "amigo_head_ref/head_ref.h"
 #include <geometry_msgs/PointStamped.h>
 
 int main(int argc, char** argv){
@@ -10,7 +10,7 @@ int main(int argc, char** argv){
   
   geometry_msgs::PointStamped target;
   
-  target.header.frame_id = "grasp_left";
+  target.header.frame_id = "grippoint_left";
   target.point.x = 0.0;
   target.point.y = 0.0;
   target.point.z = 0.0;
@@ -18,7 +18,7 @@ int main(int argc, char** argv){
   ros::Rate rate(1.0);
   
   while (ros::ok()){
-	ROS_INFO("Publish");  
+	//ROS_INFO("Publish");  
     target_pub.publish(target);
     rate.sleep();
   }
