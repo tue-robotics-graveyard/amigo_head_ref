@@ -109,18 +109,18 @@ include_directories(
 # )
 
 ## Declare a cpp executable
-add_executable(head_ref src/head_ref.cpp)
+add_executable(amigo_head_ref src/head_ref.cpp)
 add_executable(dummy_action_client src/dummy_action_client.cpp)
 add_executable(head_ref_test_client src/test_client.cpp)
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
-add_dependencies(head_ref amigo_head_ref_generate_messages_cpp)
+add_dependencies(amigo_head_ref amigo_head_ref_generate_messages_cpp)
 add_dependencies(dummy_action_client amigo_head_ref_generate_messages_cpp)
 add_dependencies(head_ref_test_client amigo_head_ref_generate_messages_cpp)
 
 ## Specify libraries to link a library or executable target against
-target_link_libraries(head_ref ${catkin_LIBRARIES})
+target_link_libraries(amigo_head_ref ${catkin_LIBRARIES})
 target_link_libraries(dummy_action_client ${catkin_LIBRARIES})
 target_link_libraries(head_ref_test_client ${catkin_LIBRARIES})
 
