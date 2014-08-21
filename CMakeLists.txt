@@ -15,7 +15,7 @@ find_package(catkin REQUIRED COMPONENTS
 
 add_action_files(
   FILES
-  HeadRef.action
+    HeadRef.action
 )
 
 generate_messages(
